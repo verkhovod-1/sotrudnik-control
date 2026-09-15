@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { User, Task } from '../types';
 import {
   getTasksForUser,
@@ -9,8 +9,11 @@ import {
   findUserById,
   formatMSKDateTime,
   getState,
+  addTaskAttachment,
+  removeTaskAttachment,
 } from '../store';
 import SearchBar from './SearchBar';
+import { readFileAsDataURL, formatFileSize, getFileIcon, isAllowedFile } from '../utils/files';
 
 interface TasksProps {
   user: User;
@@ -164,6 +167,40 @@ export default function Tasks({ user }: TasksProps) {
                     {task.description && (
                       <p className="text-gray-400 text-sm mt-1">{task.description}</p>
                     )}
+                    {/* Вложения */}
+                    {task.attachments && task.attachments.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {task.attachments.map((att, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 p-1.5 bg-gray-700/30 rounded-lg"
+                          >
+                            <a
+                              href={att.dataUrl}
+                              download={att.name}
+                              className="flex items-center gap-2 hover:opacity-80 transition flex-1 min-w-0"
+                            >
+                              <span className="text-sm">{getFileIcon(att.name)}</span>
+                              <span className="text-xs text-blue-300 truncate">{att.name}</span>
+                              <span className="text-xs text-gray-500">{formatFileSize(att.size)}</span>
+                            </a>
+                            {(task.creatorId === user.id || task.assigneeId === user.id || user.role === 'director' || user.role === 'admin') && (
+                              <button
+                                onClick={() => {
+                                  removeTaskAttachment(task.id, idx);
+                                  setRefresh((r) => r + 1);
+                                }}
+                                className="text-gray-500 hover:text-red-400 transition"
+                              >
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
                       <span className="text-gray-500">
                         Создана: {formatMSKDateTime(task.createdAt)}
@@ -182,6 +219,12 @@ export default function Tasks({ user }: TasksProps) {
                       )}
                     </div>
                   </div>
+
+                  {/* Кнопка добавления вложения */}
+                  <TaskAttachButton
+                    taskId={task.id}
+                    onAttached={() => setRefresh((r) => r + 1)}
+                  />
 
                   {(task.creatorId === user.id || user.role === 'director' || user.role === 'admin') && (
                     <button
@@ -390,5 +433,55 @@ function DelegateTaskModal({ user, onClose, onCreated }: { user: User; onClose: 
         </form>
       </div>
     </div>
+  );
+}
+
+function TaskAttachButton({ taskId, onAttached }: { taskId: string; onAttached: () => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+    
+    if (!isAllowedFile(file.name)) {
+      alert('Формат файла не поддерживается');
+      return;
+    }
+    
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      addTaskAttachment(taskId, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        dataUrl,
+      });
+      onAttached();
+    } catch (error) {
+      console.error('Ошибка чтения файла:', error);
+      alert('Ошибка при чтении файла');
+    }
+    
+    e.target.value = '';
+  };
+
+  return (
+    <>
+      <input
+        ref={inputRef}
+        type="file"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+      <button
+        onClick={() => inputRef.current?.click()}
+        className="text-gray-500 hover:text-blue-400 transition p-1"
+        title="Прикрепить файл"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+        </svg>
+      </button>
+    </>
   );
 }

@@ -168,6 +168,28 @@ export function completeTask(taskId: string): void {
   }
 }
 
+export function addTaskAttachment(
+  taskId: string,
+  attachment: { name: string; size: number; type: string; dataUrl: string }
+): void {
+  const state = getState();
+  const task = state.tasks.find((t) => t.id === taskId);
+  if (task) {
+    if (!task.attachments) task.attachments = [];
+    task.attachments.push(attachment);
+    saveState(state);
+  }
+}
+
+export function removeTaskAttachment(taskId: string, attachmentIndex: number): void {
+  const state = getState();
+  const task = state.tasks.find((t) => t.id === taskId);
+  if (task && task.attachments) {
+    task.attachments.splice(attachmentIndex, 1);
+    saveState(state);
+  }
+}
+
 export function uncompleteTask(taskId: string): void {
   const state = getState();
   const task = state.tasks.find((t) => t.id === taskId);
@@ -207,6 +229,10 @@ export function addDocument(doc: Omit<Document, 'id' | 'uploadedAt'>): Document 
 
 export function getDocumentsByCategory(category: Document['category']): Document[] {
   return getState().documents.filter((d) => d.category === category);
+}
+
+export function getAllDocuments(): Document[] {
+  return getState().documents;
 }
 
 export function deleteDocument(docId: string): void {
@@ -271,6 +297,28 @@ export function deleteCalendarNote(noteId: string): void {
   const state = getState();
   state.calendarNotes = state.calendarNotes.filter((n) => n.id !== noteId);
   saveState(state);
+}
+
+export function addCalendarNoteAttachment(
+  noteId: string,
+  attachment: { name: string; size: number; type: string; dataUrl: string }
+): void {
+  const state = getState();
+  const note = state.calendarNotes.find((n) => n.id === noteId);
+  if (note) {
+    if (!note.attachments) note.attachments = [];
+    note.attachments.push(attachment);
+    saveState(state);
+  }
+}
+
+export function removeCalendarNoteAttachment(noteId: string, attachmentIndex: number): void {
+  const state = getState();
+  const note = state.calendarNotes.find((n) => n.id === noteId);
+  if (note && note.attachments) {
+    note.attachments.splice(attachmentIndex, 1);
+    saveState(state);
+  }
 }
 
 // MSK Time utilities

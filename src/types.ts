@@ -23,6 +23,12 @@ export interface Task {
   deadline: string;
   completed: boolean;
   completedAt?: string;
+  attachments?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  }>;
 }
 
 export interface Document {
@@ -32,6 +38,9 @@ export interface Document {
   uploadedBy: string;
   uploadedAt: string;
   fileName: string;
+  fileSize?: number;
+  fileData?: string; // Base64 данные файла
+  fileType?: string; // MIME тип
 }
 
 export type DocumentCategory =
@@ -49,6 +58,12 @@ export interface ChatMessage {
   text: string;
   timestamp: string;
   read: boolean;
+  attachment?: {
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  };
 }
 
 export interface CalendarNote {
@@ -60,6 +75,12 @@ export interface CalendarNote {
   recurring: boolean; // monthly
   remindDaysBefore: number;
   taskId?: string; // linked auto-created task
+  attachments?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  }>;
 }
 
 export interface AppState {

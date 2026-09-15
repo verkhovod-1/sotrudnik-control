@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { User, Document, DocumentCategory } from '../types';
 import { addDocument, getDocumentsByCategory, deleteDocument, formatMSKDateTime, findUserById, getState } from '../store';
 import SearchBar from './SearchBar';
+import FileUpload, { FileDisplay } from './FileUpload';
+import { readFileAsDataURL, formatFileSize, getFileIcon } from '../utils/files';
 
 interface DocumentsProps {
   user: User;
@@ -102,22 +104,52 @@ export default function Documents({ user }: DocumentsProps) {
             <div className="space-y-2">
               {documents.map((doc) => {
                 const uploader = findUserById(doc.uploadedBy);
+                const icon = getFileIcon(doc.fileName);
+                const size = doc.fileSize ? formatFileSize(doc.fileSize) : '';
+                
+                const handleDownload = () => {
+                  if (!doc.fileData) return;
+                  const link = window.document.createElement('a');
+                  link.href = doc.fileData;
+                  link.download = doc.fileName;
+                  window.document.body.appendChild(link);
+                  link.click();
+                  window.document.body.removeChild(link);
+                };
+                
                 return (
                   <div
                     key={doc.id}
                     className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 flex items-center gap-4 hover:bg-gray-800/70 transition"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                      </svg>
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl flex-shrink-0">
+                      {icon}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white font-medium truncate">{doc.name}</p>
-                      <p className="text-gray-500 text-xs">
-                        Загрузил: {uploader?.name || 'Неизвестно'} • {formatMSKDateTime(doc.uploadedAt)}
-                      </p>
+                      <div className="flex items-center gap-2 text-gray-500 text-xs">
+                        <span>{uploader?.name || 'Неизвестно'}</span>
+                        <span>•</span>
+                        <span>{formatMSKDateTime(doc.uploadedAt)}</span>
+                        {size && (
+                          <>
+                            <span>•</span>
+                            <span>{size}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
+                    {doc.fileData && (
+                      <button
+                        onClick={handleDownload}
+                        className="text-gray-400 hover:text-blue-400 transition p-2"
+                        title="Скачать"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </button>
+                    )}
                     {(doc.uploadedBy === user.id || user.role === 'director' || user.role === 'admin') && (
                       <button
                         onClick={() => handleDelete(doc.id)}
@@ -164,25 +196,74 @@ function UploadDocModal({
   onUploaded: () => void;
 }) {
   const [name, setName] = useState('');
-  const [fileName, setFileName] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileData, setFileData] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileSelect = async (file: File) => {
+    setSelectedFile(file);
+    if (!name) {
+      setName(file.name.replace(/\.[^/.]+$/, '')); // Убираем расширение для названия
+    }
+    
+    // Читаем файл как Base64
+    try {
+      const data = await readFileAsDataURL(file);
+      setFileData(data);
+    } catch (error) {
+      console.error('Ошибка чтения файла:', error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name) return;
-    addDocument({
-      name,
-      category,
-      uploadedBy: user.id,
-      fileName: fileName || name,
-    });
-    onUploaded();
+    
+    setIsUploading(true);
+    
+    try {
+      addDocument({
+        name,
+        category,
+        uploadedBy: user.id,
+        fileName: selectedFile?.name || name,
+        fileSize: selectedFile?.size,
+        fileData: fileData,
+        fileType: selectedFile?.type,
+      });
+      onUploaded();
+    } catch (error) {
+      console.error('Ошибка загрузки:', error);
+      alert('Ошибка при загрузке файла');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
+      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
         <h3 className="text-xl font-bold text-white mb-4">Добавить документ</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Файл</label>
+            <FileUpload onFileSelect={handleFileSelect} />
+            {selectedFile && (
+              <div className="mt-3">
+                <FileDisplay 
+                  file={{
+                    name: selectedFile.name,
+                    size: selectedFile.size,
+                    dataUrl: fileData
+                  }}
+                  onRemove={() => {
+                    setSelectedFile(null);
+                    setFileData('');
+                  }}
+                />
+              </div>
+            )}
+          </div>
           <div>
             <label className="block text-sm text-gray-400 mb-1">Название документа</label>
             <input
@@ -194,29 +275,21 @@ function UploadDocModal({
               required
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Имя файла (необязательно)</label>
-            <input
-              type="text"
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="document.pdf"
-            />
-          </div>
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
               className="flex-1 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              disabled={isUploading}
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium disabled:opacity-50"
+              disabled={isUploading || !selectedFile}
             >
-              Добавить
+              {isUploading ? 'Загрузка...' : 'Загрузить'}
             </button>
           </div>
         </form>

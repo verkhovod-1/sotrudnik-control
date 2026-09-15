@@ -8,6 +8,7 @@ import {
   formatMSKDateTime,
 } from '../store';
 import SearchBar from './SearchBar';
+import { readFileAsDataURL, formatFileSize, getFileIcon, isAllowedFile } from '../utils/files';
 
 interface ChatProps {
   user: User;
@@ -21,6 +22,8 @@ export default function Chat({ user }: ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [contactSearch, setContactSearch] = useState('');
   const [messageSearch, setMessageSearch] = useState('');
+  const [attachment, setAttachment] = useState<{name: string; size: number; type: string; dataUrl: string} | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const state = getState();
   const otherUsers = state.users.filter((u) => u.id !== user.id);
@@ -33,10 +36,41 @@ export default function Chat({ user }: ChatProps) {
       })
     : otherUsers;
 
-  // Фильтрация сообщений по поиску
+  // Фильтрация сообщений по поиску (также ищет по вложениям)
   const filteredMessages = messageSearch.trim()
-    ? messages.filter((m) => m.text.toLowerCase().includes(messageSearch.toLowerCase()))
+    ? messages.filter((m) => {
+        const query = messageSearch.toLowerCase();
+        const matchesText = m.text.toLowerCase().includes(query);
+        const matchesAttachment = m.attachment?.name.toLowerCase().includes(query);
+        return matchesText || matchesAttachment;
+      })
     : messages;
+
+  const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+    
+    if (!isAllowedFile(file.name)) {
+      alert('Формат файла не поддерживается');
+      return;
+    }
+    
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      setAttachment({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        dataUrl,
+      });
+    } catch (error) {
+      console.error('Ошибка чтения файла:', error);
+      alert('Ошибка при чтении файла');
+    }
+    
+    // Очищаем input, чтобы можно было выбрать тот же файл снова
+    e.target.value = '';
+  };
 
   useEffect(() => {
     if (selectedUser) {
@@ -59,13 +93,15 @@ export default function Chat({ user }: ChatProps) {
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!messageText.trim() || !selectedUser) return;
+    if ((!messageText.trim() && !attachment) || !selectedUser) return;
     sendMessage({
       senderId: user.id,
       receiverId: selectedUser,
       text: messageText.trim(),
+      attachment: attachment || undefined,
     });
     setMessageText('');
+    setAttachment(null);
     setRefresh((r) => r + 1);
   };
 
@@ -195,7 +231,24 @@ export default function Chat({ user }: ChatProps) {
                               : 'bg-gray-700 text-gray-200 rounded-bl-md'
                           }`}
                         >
-                          <p className="text-sm">{msg.text}</p>
+                          {msg.text && <p className="text-sm">{msg.text}</p>}
+                          {msg.attachment && (
+                            <div className={`mt-1 p-2 rounded-lg ${isMe ? 'bg-blue-600/50' : 'bg-gray-600/50'}`}>
+                              <a
+                                href={msg.attachment.dataUrl}
+                                download={msg.attachment.name}
+                                className="flex items-center gap-2 hover:opacity-80 transition"
+                              >
+                                <span className="text-lg">{getFileIcon(msg.attachment.name)}</span>
+                                <div className="min-w-0">
+                                  <p className="text-xs font-medium truncate">{msg.attachment.name}</p>
+                                  <p className={`text-xs ${isMe ? 'text-blue-200' : 'text-gray-400'}`}>
+                                    {formatFileSize(msg.attachment.size)}
+                                  </p>
+                                </div>
+                              </a>
+                            </div>
+                          )}
                           <p className={`text-xs mt-1 ${isMe ? 'text-blue-200' : 'text-gray-500'}`}>
                             {formatMSKDateTime(msg.timestamp)}
                           </p>
@@ -209,7 +262,41 @@ export default function Chat({ user }: ChatProps) {
 
               {/* Input */}
               <form onSubmit={handleSend} className="p-4 border-t border-gray-700/50">
+                {attachment && (
+                  <div className="mb-2 p-2 bg-gray-700/50 rounded-lg flex items-center gap-2">
+                    <span className="text-lg">{getFileIcon(attachment.name)}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm truncate">{attachment.name}</p>
+                      <p className="text-gray-500 text-xs">{formatFileSize(attachment.size)}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAttachment(null)}
+                      className="text-gray-500 hover:text-red-400 transition"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
                 <div className="flex gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    onChange={handleFileAttach}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-gray-400 hover:text-blue-400 transition rounded-lg hover:bg-gray-700/50"
+                    title="Прикрепить файл"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </button>
                   <input
                     type="text"
                     value={messageText}
