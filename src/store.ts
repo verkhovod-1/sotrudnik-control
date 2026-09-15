@@ -1,4 +1,4 @@
-import { AppState, User, Task, Document, ChatMessage, CalendarNote } from './types';
+import { AppState, User, Task, Document, ChatMessage, CalendarNote, Role } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 const STORAGE_KEY = 'synchron_app_data';
@@ -11,6 +11,7 @@ const defaultState: AppState = {
       name: 'Иванов Иван Иванович',
       password: '111111',
       role: 'director',
+      isActive: true,
       createdAt: new Date().toISOString(),
     },
   ],
@@ -37,17 +38,35 @@ export function saveState(state: AppState): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+// Генерация 6-значного временного пароля
+export function generateTempPassword(): string {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
 // User operations
-export function addUser(user: Omit<User, 'id' | 'createdAt'>): User {
+export function inviteUser(
+  email: string,
+  name: string,
+  role: Role,
+  invitedBy: string
+): { user: User; tempPassword: string } {
   const state = getState();
+  const tempPassword = generateTempPassword();
   const newUser: User = {
-    ...user,
     id: uuidv4(),
+    email,
+    name,
+    password: '', // will be set after activation
+    tempPassword,
+    role,
+    isActive: false,
     createdAt: new Date().toISOString(),
+    invitedBy,
+    inviteSentAt: new Date().toISOString(),
   };
   state.users.push(newUser);
   saveState(state);
-  return newUser;
+  return { user: newUser, tempPassword };
 }
 
 export function findUserByEmail(email: string): User | undefined {
@@ -66,19 +85,63 @@ export function getAdminCount(): number {
   return getState().users.filter((u) => u.role === 'admin').length;
 }
 
+// Аутентификация — проверяет временный или постоянный пароль
 export function authenticate(email: string, password: string): User | null {
   const user = findUserByEmail(email);
-  if (user && user.password === password) return user;
+  if (!user) return null;
+
+  // Если пользователь не активирован — проверяем временный пароль
+  if (!user.isActive) {
+    if (user.tempPassword === password) return user;
+    return null;
+  }
+
+  // Если активирован — проверяем постоянный пароль
+  if (user.password === password) return user;
   return null;
 }
 
-export function updateUserRole(userId: string, role: User['role']): void {
+// Активация пользователя — установка постоянного пароля
+export function activateUser(email: string, newPassword: string): { success: boolean; error?: string } {
+  const state = getState();
+  const user = state.users.find((u) => u.email === email);
+  if (!user) return { success: false, error: 'Пользователь не найден' };
+  if (user.isActive) return { success: false, error: 'Пользователь уже активирован' };
+  if (!/^\d{6}$/.test(newPassword)) return { success: false, error: 'Пароль должен состоять из 6 цифр' };
+
+  user.password = newPassword;
+  user.isActive = true;
+  user.tempPassword = undefined;
+  saveState(state);
+  return { success: true };
+}
+
+// Сброс пароля — генерация нового временного
+export function resetPassword(email: string): { success: boolean; tempPassword?: string; error?: string } {
+  const state = getState();
+  const user = state.users.find((u) => u.email === email);
+  if (!user) return { success: false, error: 'Пользователь с таким email не найден' };
+
+  const tempPassword = generateTempPassword();
+  user.tempPassword = tempPassword;
+  user.isActive = false; // требуется повторная активация
+  saveState(state);
+  return { success: true, tempPassword };
+}
+
+export function updateUserRole(userId: string, role: Role): void {
   const state = getState();
   const user = state.users.find((u) => u.id === userId);
   if (user) {
     user.role = role;
     saveState(state);
   }
+}
+
+export function removeUser(userId: string): void {
+  const state = getState();
+  state.users = state.users.filter((u) => u.id !== userId);
+  saveState(state);
 }
 
 // Task operations

@@ -4,9 +4,13 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  password: string; // 6-digit
+  password: string; // 6-digit (after activation)
+  tempPassword?: string; // temporary password before activation
   role: Role;
+  isActive: boolean; // false until user sets own password
   createdAt: string;
+  invitedBy?: string; // id of the user who invited
+  inviteSentAt?: string;
 }
 
 export interface Task {

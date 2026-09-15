@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { User } from './types';
-import { authenticate, findUserByEmail, addUser, getDirectorCount, getAdminCount } from './store';
+import {
+  authenticate,
+  findUserByEmail,
+  resetPassword,
+} from './store';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 
@@ -13,7 +17,12 @@ function App() {
     if (saved) {
       try {
         const user = JSON.parse(saved);
-        setCurrentUser(user);
+        // Проверяем что пользователь всё ещё активен
+        if (user.isActive) {
+          setCurrentUser(user);
+        } else {
+          localStorage.removeItem('synchron_current_user');
+        }
       } catch {
         localStorage.removeItem('synchron_current_user');
       }
@@ -21,33 +30,27 @@ function App() {
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (email: string, password: string): string | null => {
-    const user = authenticate(email, password);
-    if (!user) return 'Неверный email или пароль';
+  // Вход — проверяет email и пароль (временный или постоянный)
+  const handleLogin = (email: string, password: string): { success: boolean; error?: string; needsActivation?: boolean } => {
+    const user = findUserByEmail(email);
+    if (!user) return { success: false, error: 'Пользователь с таким email не найден' };
+
+    const authenticated = authenticate(email, password);
+    if (!authenticated) return { success: false, error: 'Неверный пароль' };
+
+    // Если пользователь не активирован — нужно сменить пароль
+    if (!user.isActive) {
+      return { success: false, needsActivation: true };
+    }
+
     setCurrentUser(user);
     localStorage.setItem('synchron_current_user', JSON.stringify(user));
-    return null;
+    return { success: true };
   };
 
-  const handleRegister = (email: string, name: string, password: string): string | null => {
-    if (findUserByEmail(email)) return 'Пользователь с таким email уже существует';
-    if (password.length !== 6) return 'Пароль должен состоять из 6 цифр';
-    if (!/^\d{6}$/.test(password)) return 'Пароль должен содержать только цифры';
-    
-    const directorCount = getDirectorCount();
-    const adminCount = getAdminCount();
-    
-    let role: 'director' | 'admin' | 'employee' = 'employee';
-    if (directorCount === 0) {
-      role = 'director';
-    } else if (adminCount < 3) {
-      role = 'admin';
-    }
-    
-    const user = addUser({ email, name, password, role });
-    setCurrentUser(user);
-    localStorage.setItem('synchron_current_user', JSON.stringify(user));
-    return null;
+  // Забыл пароль — генерирует временный
+  const handleForgotPassword = (email: string): { success: boolean; tempPassword?: string; error?: string } => {
+    return resetPassword(email);
   };
 
   const handleLogout = () => {
@@ -64,7 +67,16 @@ function App() {
   }
 
   if (!currentUser) {
-    return <Login onLogin={handleLogin} onRegister={handleRegister} />;
+    return (
+      <Login
+        onLogin={handleLogin}
+        onForgotPassword={handleForgotPassword}
+        onActivated={(user) => {
+          setCurrentUser(user);
+          localStorage.setItem('synchron_current_user', JSON.stringify(user));
+        }}
+      />
+    );
   }
 
   return <Dashboard user={currentUser} onLogout={handleLogout} />;

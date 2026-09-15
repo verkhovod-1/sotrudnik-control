@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { User, Task } from '../types';
 import {
   getTasksForUser,
-  getAllTasks,
   addTask,
   completeTask,
   uncompleteTask,
@@ -20,7 +19,6 @@ export default function Tasks({ user }: TasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDelegateModal, setShowDelegateModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
   const [refresh, setRefresh] = useState(0);
 
