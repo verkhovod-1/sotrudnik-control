@@ -11,6 +11,8 @@ import {
   getState,
 } from '../store';
 import SearchBar from './SearchBar';
+import FileActions from './FileActions';
+import { formatFileSize, getFileIcon } from '../utils/files';
 
 interface AllTasksProps {
   user: User;
@@ -179,6 +181,28 @@ export default function AllTasks({ user }: AllTasksProps) {
                     </h4>
                     {task.description && (
                       <p className="text-gray-400 text-sm mt-1">{task.description}</p>
+                    )}
+                    {/* Вложения */}
+                    {task.attachments && task.attachments.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {task.attachments.map((att, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 p-1.5 bg-gray-700/30 rounded-lg"
+                          >
+                            <span className="text-sm flex-shrink-0">{getFileIcon(att.name)}</span>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs text-blue-300 truncate block">{att.name}</span>
+                              <span className="text-xs text-gray-500">{formatFileSize(att.size)}</span>
+                            </div>
+                            <FileActions
+                              dataUrl={att.dataUrl}
+                              filename={att.name}
+                              compact
+                            />
+                          </div>
+                        ))}
+                      </div>
                     )}
                     <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
                       <span className="text-purple-300 flex items-center gap-1">

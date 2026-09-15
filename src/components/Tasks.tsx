@@ -13,6 +13,7 @@ import {
   removeTaskAttachment,
 } from '../store';
 import SearchBar from './SearchBar';
+import FileActions from './FileActions';
 import { readFileAsDataURL, formatFileSize, getFileIcon, isAllowedFile } from '../utils/files';
 
 interface TasksProps {
@@ -175,15 +176,16 @@ export default function Tasks({ user }: TasksProps) {
                             key={idx}
                             className="flex items-center gap-2 p-1.5 bg-gray-700/30 rounded-lg"
                           >
-                            <a
-                              href={att.dataUrl}
-                              download={att.name}
-                              className="flex items-center gap-2 hover:opacity-80 transition flex-1 min-w-0"
-                            >
-                              <span className="text-sm">{getFileIcon(att.name)}</span>
-                              <span className="text-xs text-blue-300 truncate">{att.name}</span>
+                            <span className="text-sm flex-shrink-0">{getFileIcon(att.name)}</span>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs text-blue-300 truncate block">{att.name}</span>
                               <span className="text-xs text-gray-500">{formatFileSize(att.size)}</span>
-                            </a>
+                            </div>
+                            <FileActions
+                              dataUrl={att.dataUrl}
+                              filename={att.name}
+                              compact
+                            />
                             {(task.creatorId === user.id || task.assigneeId === user.id || user.role === 'director' || user.role === 'admin') && (
                               <button
                                 onClick={() => {

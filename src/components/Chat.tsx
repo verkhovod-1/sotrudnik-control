@@ -8,6 +8,7 @@ import {
   formatMSKDateTime,
 } from '../store';
 import SearchBar from './SearchBar';
+import FileActions from './FileActions';
 import { readFileAsDataURL, formatFileSize, getFileIcon, isAllowedFile } from '../utils/files';
 
 interface ChatProps {
@@ -234,19 +235,20 @@ export default function Chat({ user }: ChatProps) {
                           {msg.text && <p className="text-sm">{msg.text}</p>}
                           {msg.attachment && (
                             <div className={`mt-1 p-2 rounded-lg ${isMe ? 'bg-blue-600/50' : 'bg-gray-600/50'}`}>
-                              <a
-                                href={msg.attachment.dataUrl}
-                                download={msg.attachment.name}
-                                className="flex items-center gap-2 hover:opacity-80 transition"
-                              >
-                                <span className="text-lg">{getFileIcon(msg.attachment.name)}</span>
-                                <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg flex-shrink-0">{getFileIcon(msg.attachment.name)}</span>
+                                <div className="min-w-0 flex-1">
                                   <p className="text-xs font-medium truncate">{msg.attachment.name}</p>
                                   <p className={`text-xs ${isMe ? 'text-blue-200' : 'text-gray-400'}`}>
                                     {formatFileSize(msg.attachment.size)}
                                   </p>
                                 </div>
-                              </a>
+                                <FileActions
+                                  dataUrl={msg.attachment.dataUrl}
+                                  filename={msg.attachment.name}
+                                  compact
+                                />
+                              </div>
                             </div>
                           )}
                           <p className={`text-xs mt-1 ${isMe ? 'text-blue-200' : 'text-gray-500'}`}>

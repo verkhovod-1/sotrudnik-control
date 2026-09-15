@@ -3,6 +3,7 @@ import { User, Document, DocumentCategory } from '../types';
 import { addDocument, getDocumentsByCategory, deleteDocument, formatMSKDateTime, findUserById, getState } from '../store';
 import SearchBar from './SearchBar';
 import FileUpload, { FileDisplay } from './FileUpload';
+import FileActions from './FileActions';
 import { readFileAsDataURL, formatFileSize, getFileIcon } from '../utils/files';
 
 interface DocumentsProps {
@@ -107,16 +108,6 @@ export default function Documents({ user }: DocumentsProps) {
                 const icon = getFileIcon(doc.fileName);
                 const size = doc.fileSize ? formatFileSize(doc.fileSize) : '';
                 
-                const handleDownload = () => {
-                  if (!doc.fileData) return;
-                  const link = window.document.createElement('a');
-                  link.href = doc.fileData;
-                  link.download = doc.fileName;
-                  window.document.body.appendChild(link);
-                  link.click();
-                  window.document.body.removeChild(link);
-                };
-                
                 return (
                   <div
                     key={doc.id}
@@ -140,15 +131,7 @@ export default function Documents({ user }: DocumentsProps) {
                       </div>
                     </div>
                     {doc.fileData && (
-                      <button
-                        onClick={handleDownload}
-                        className="text-gray-400 hover:text-blue-400 transition p-2"
-                        title="Скачать"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </button>
+                      <FileActions dataUrl={doc.fileData} filename={doc.fileName} compact />
                     )}
                     {(doc.uploadedBy === user.id || user.role === 'director' || user.role === 'admin') && (
                       <button

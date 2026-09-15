@@ -75,6 +75,108 @@ export function readFileAsDataURL(file: File): Promise<string> {
   });
 }
 
+// Скачивание файла
+export function downloadFile(dataUrl: string, filename: string): void {
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Печать файла
+export function printFile(dataUrl: string, filename: string): void {
+  const extension = getFileExtension(filename);
+  
+  // Для изображений
+  if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension)) {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Печать: ${filename}</title>
+            <style>
+              body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+              img { max-width: 100%; max-height: 100vh; object-fit: contain; }
+              @media print {
+                body { margin: 0; }
+                img { max-width: 100%; max-height: 100%; }
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${dataUrl}" alt="${filename}" />
+            <script>
+              window.onload = () => {
+                window.print();
+                window.onafterprint = () => window.close();
+              };
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+    return;
+  }
+  
+  // Для PDF
+  if (extension === 'pdf') {
+    const printWindow = window.open(dataUrl, '_blank');
+    if (printWindow) {
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      };
+    }
+    return;
+  }
+  
+  // Для текстовых файлов
+  if (['txt', 'rtf'].includes(extension)) {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Печать: ${filename}</title>
+            <style>
+              body { font-family: monospace; padding: 20px; white-space: pre-wrap; }
+              @media print {
+                body { padding: 0; }
+              }
+            </style>
+          </head>
+          <body>
+            <iframe src="${dataUrl}" style="width: 100%; height: 100vh; border: none;" onload="this.contentWindow.print()"></iframe>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+    return;
+  }
+  
+  // Для остальных форматов - открываем в новой вкладке (если возможно)
+  const printWindow = window.open(dataUrl, '_blank');
+  if (printWindow) {
+    printWindow.onload = () => {
+      setTimeout(() => {
+        if (confirm(`Файл "${filename}" открыт в новой вкладке. Используйте встроенную функцию печати браузера или сторонней программы.\n\nНажмите OK для открытия диалога печати.`)) {
+          printWindow.print();
+        }
+      }, 1000);
+    };
+  } else {
+    alert(`Не удалось открыть файл для печати. Пожалуйста, скачайте файл и распечатайте его из сторонней программы.`);
+  }
+}
+
 // Интерфейс для хранения информации о файле
 export interface FileData {
   id: string;
