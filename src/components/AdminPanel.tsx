@@ -8,6 +8,7 @@ import {
   getDirectorCount,
   getAdminCount,
 } from '../store';
+import SearchBar from './SearchBar';
 
 interface AdminPanelProps {
   user: User;
@@ -17,6 +18,7 @@ export default function AdminPanel({ user }: AdminPanelProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [showInvite, setShowInvite] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setUsers(getState().users);
@@ -24,6 +26,17 @@ export default function AdminPanel({ user }: AdminPanelProps) {
 
   const directorCount = getDirectorCount();
   const adminCount = getAdminCount();
+
+  // Фильтрация пользователей по поиску
+  const filteredUsers = searchQuery.trim()
+    ? users.filter((u) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          u.name.toLowerCase().includes(query) ||
+          u.email.toLowerCase().includes(query)
+        );
+      })
+    : users;
 
   const handlePromoteToAdmin = (userId: string) => {
     if (adminCount >= 3) {
@@ -116,10 +129,22 @@ export default function AdminPanel({ user }: AdminPanelProps) {
       {/* Users list */}
       <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden">
         <div className="p-4 border-b border-gray-700/50">
-          <h4 className="text-white font-semibold">Список сотрудников</h4>
+          <h4 className="text-white font-semibold mb-3">Список сотрудников</h4>
+          <div className="max-w-md">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Поиск по имени или email..."
+            />
+          </div>
         </div>
         <div className="divide-y divide-gray-700/50">
-          {users.map((u) => (
+          {filteredUsers.length === 0 ? (
+            <div className="p-6 text-center text-gray-500 text-sm">
+              {searchQuery.trim() ? 'Сотрудники не найдены' : 'Нет сотрудников'}
+            </div>
+          ) : null}
+          {filteredUsers.map((u) => (
             <div key={u.id} className="p-4 flex items-center gap-4 hover:bg-gray-700/20 transition">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {u.name.charAt(0)}

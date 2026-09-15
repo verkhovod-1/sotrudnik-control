@@ -7,6 +7,7 @@ import {
   markMessagesAsRead,
   formatMSKDateTime,
 } from '../store';
+import SearchBar from './SearchBar';
 
 interface ChatProps {
   user: User;
@@ -18,9 +19,24 @@ export default function Chat({ user }: ChatProps) {
   const [messages, setMessages] = useState<ReturnType<typeof getConversation>>([]);
   const [refresh, setRefresh] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [contactSearch, setContactSearch] = useState('');
+  const [messageSearch, setMessageSearch] = useState('');
 
   const state = getState();
   const otherUsers = state.users.filter((u) => u.id !== user.id);
+
+  // Фильтрация контактов по поиску
+  const filteredUsers = contactSearch.trim()
+    ? otherUsers.filter((u) => {
+        const query = contactSearch.toLowerCase();
+        return u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query);
+      })
+    : otherUsers;
+
+  // Фильтрация сообщений по поиску
+  const filteredMessages = messageSearch.trim()
+    ? messages.filter((m) => m.text.toLowerCase().includes(messageSearch.toLowerCase()))
+    : messages;
 
   useEffect(() => {
     if (selectedUser) {
@@ -67,14 +83,21 @@ export default function Chat({ user }: ChatProps) {
           <div className="p-4 border-b border-gray-700/50">
             <h3 className="text-white font-semibold">Сотрудники</h3>
             <p className="text-gray-500 text-xs mt-1">Выберите сотрудника для чата</p>
+            <div className="mt-2">
+              <SearchBar
+                value={contactSearch}
+                onChange={setContactSearch}
+                placeholder="Поиск сотрудника..."
+              />
+            </div>
           </div>
           <div className="flex-1 overflow-y-auto">
-            {otherUsers.length === 0 ? (
+            {filteredUsers.length === 0 ? (
               <div className="p-4 text-center text-gray-500 text-sm">
-                Пока нет других сотрудников
+                {otherUsers.length === 0 ? 'Пока нет других сотрудников' : 'Ничего не найдено'}
               </div>
             ) : (
-              otherUsers.map((u) => {
+              filteredUsers.map((u) => {
                 const unread = getUnreadForUser(u.id);
                 return (
                   <button
@@ -121,34 +144,47 @@ export default function Chat({ user }: ChatProps) {
           ) : (
             <>
               {/* Chat header */}
-              <div className="p-4 border-b border-gray-700/50 flex items-center gap-3">
-                <button
-                  onClick={() => setSelectedUser(null)}
-                  className="md:hidden text-gray-400 hover:text-white"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
-                  {otherUsers.find((u) => u.id === selectedUser)?.name.charAt(0)}
+              <div className="p-4 border-b border-gray-700/50 flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setSelectedUser(null)}
+                    className="md:hidden text-gray-400 hover:text-white"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
+                    {otherUsers.find((u) => u.id === selectedUser)?.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-white font-medium text-sm">
+                      {otherUsers.find((u) => u.id === selectedUser)?.name}
+                    </p>
+                    <p className="text-gray-500 text-xs">Личный чат</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-medium text-sm">
-                    {otherUsers.find((u) => u.id === selectedUser)?.name}
-                  </p>
-                  <p className="text-gray-500 text-xs">Личный чат</p>
-                </div>
+                <SearchBar
+                  value={messageSearch}
+                  onChange={setMessageSearch}
+                  placeholder="Поиск по сообщениям..."
+                />
               </div>
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {messages.length === 0 ? (
+                {filteredMessages.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500 text-sm">Начните диалог</p>
+                    <p className="text-gray-500 text-sm">
+                      {messages.length === 0
+                        ? 'Начните диалог'
+                        : messageSearch.trim()
+                        ? 'Сообщения не найдены'
+                        : 'Начните диалог'}
+                    </p>
                   </div>
                 ) : (
-                  messages.map((msg) => {
+                  filteredMessages.map((msg) => {
                     const isMe = msg.senderId === user.id;
                     return (
                       <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>

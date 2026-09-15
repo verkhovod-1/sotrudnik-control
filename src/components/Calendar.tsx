@@ -7,6 +7,7 @@ import {
   addTask,
   getMSKDateString,
 } from '../store';
+import SearchBar from './SearchBar';
 
 interface CalendarProps {
   user: User;
@@ -18,10 +19,16 @@ export default function Calendar({ user }: CalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showAddNote, setShowAddNote] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setNotes(getCalendarNotesForUser(user.id));
   }, [user.id, refresh]);
+
+  // Фильтрация заметок по поиску
+  const filteredNotes = searchQuery.trim()
+    ? notes.filter((n) => n.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    : notes;
 
   // Check reminders and auto-create tasks
   useEffect(() => {
@@ -77,7 +84,7 @@ export default function Calendar({ user }: CalendarProps) {
 
   const getNotesForDay = (day: number) => {
     const dateStr = getDateString(day);
-    return notes.filter((n) => n.date === dateStr);
+    return filteredNotes.filter((n) => n.date === dateStr);
   };
 
   const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
@@ -91,11 +98,20 @@ export default function Calendar({ user }: CalendarProps) {
   const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
   const selectedNotes = selectedDate
-    ? notes.filter((n) => n.date === selectedDate)
+    ? filteredNotes.filter((n) => n.date === selectedDate)
     : [];
 
   return (
     <div className="max-w-6xl mx-auto">
+      {/* Search */}
+      <div className="mb-4 max-w-md">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Поиск заметок по названию..."
+        />
+      </div>
+
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Calendar */}
         <div className="flex-1">

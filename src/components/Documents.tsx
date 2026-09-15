@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Document, DocumentCategory } from '../types';
-import { addDocument, getDocumentsByCategory, deleteDocument, formatMSKDateTime, findUserById } from '../store';
+import { addDocument, getDocumentsByCategory, deleteDocument, formatMSKDateTime, findUserById, getState } from '../store';
+import SearchBar from './SearchBar';
 
 interface DocumentsProps {
   user: User;
@@ -20,10 +21,24 @@ export default function Documents({ user }: DocumentsProps) {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [showUpload, setShowUpload] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setDocuments(getDocumentsByCategory(activeCategory));
-  }, [activeCategory, refresh]);
+    if (searchQuery.trim()) {
+      // При поиске — ищем по всем документам
+      const allDocs = getState().documents;
+      const query = searchQuery.toLowerCase();
+      setDocuments(
+        allDocs.filter(
+          (d) =>
+            d.name.toLowerCase().includes(query) ||
+            d.fileName.toLowerCase().includes(query)
+        )
+      );
+    } else {
+      setDocuments(getDocumentsByCategory(activeCategory));
+    }
+  }, [activeCategory, refresh, searchQuery]);
 
   const handleDelete = (docId: string) => {
     deleteDocument(docId);
@@ -60,7 +75,7 @@ export default function Documents({ user }: DocumentsProps) {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-white">
-              {categories.find((c) => c.id === activeCategory)?.label}
+              {searchQuery.trim() ? `Результаты поиска: "${searchQuery}"` : categories.find((c) => c.id === activeCategory)?.label}
             </h3>
             <button
               onClick={() => setShowUpload(true)}
@@ -68,6 +83,15 @@ export default function Documents({ user }: DocumentsProps) {
             >
               + Добавить документ
             </button>
+          </div>
+
+          {/* Search */}
+          <div className="mb-4 max-w-md">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Поиск документов по названию..."
+            />
           </div>
 
           {documents.length === 0 ? (

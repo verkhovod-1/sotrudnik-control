@@ -10,6 +10,7 @@ import {
   formatMSKDateTime,
   getState,
 } from '../store';
+import SearchBar from './SearchBar';
 
 interface TasksProps {
   user: User;
@@ -21,6 +22,7 @@ export default function Tasks({ user }: TasksProps) {
   const [showDelegateModal, setShowDelegateModal] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
   const [refresh, setRefresh] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setTasks(getTasksForUser(user.id));
@@ -42,8 +44,20 @@ export default function Tasks({ user }: TasksProps) {
   };
 
   const filteredTasks = tasks.filter((t) => {
-    if (filter === 'active') return !t.completed;
-    if (filter === 'completed') return t.completed;
+    // Фильтр по статусу
+    if (filter === 'active' && t.completed) return false;
+    if (filter === 'completed' && !t.completed) return false;
+
+    // Фильтр по поисковому запросу (регистронезависимый)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      const creator = findUserById(t.creatorId);
+      const matchesTitle = t.title.toLowerCase().includes(query);
+      const matchesDescription = t.description?.toLowerCase().includes(query);
+      const matchesCreator = creator?.name.toLowerCase().includes(query);
+      return matchesTitle || matchesDescription || matchesCreator;
+    }
+
     return true;
   });
 
@@ -76,6 +90,15 @@ export default function Tasks({ user }: TasksProps) {
             + Новая задача
           </button>
         </div>
+      </div>
+
+      {/* Search */}
+      <div className="mb-4 max-w-md">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Поиск задач по названию, описанию или автору..."
+        />
       </div>
 
       {/* Filters */}
