@@ -3,12 +3,13 @@ import { User } from '../types';
 import { formatMSKTime, formatMSKDate, getUnreadCount } from '../store';
 import Sidebar from './Sidebar';
 import Tasks from './Tasks';
+import AllTasks from './AllTasks';
 import Documents from './Documents';
 import Chat from './Chat';
 import Calendar from './Calendar';
 import AdminPanel from './AdminPanel';
 
-type Section = 'tasks' | 'documents' | 'chat' | 'calendar' | 'admin';
+type Section = 'tasks' | 'all-tasks' | 'documents' | 'chat' | 'calendar' | 'admin';
 
 interface DashboardProps {
   user: User;
@@ -75,6 +76,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
             <div>
               <h2 className="text-white font-semibold text-lg capitalize">
                 {activeSection === 'tasks' && 'Мои задачи'}
+                {activeSection === 'all-tasks' && 'Все задачи'}
                 {activeSection === 'documents' && 'Документы и файлы'}
                 {activeSection === 'chat' && 'Чат'}
                 {activeSection === 'calendar' && 'Календарь'}
@@ -108,6 +110,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
         {/* Content */}
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           {activeSection === 'tasks' && <Tasks user={user} />}
+          {activeSection === 'all-tasks' && <AllTasks user={user} />}
           {activeSection === 'documents' && <Documents user={user} />}
           {activeSection === 'chat' && <Chat user={user} />}
           {activeSection === 'calendar' && <Calendar user={user} />}
