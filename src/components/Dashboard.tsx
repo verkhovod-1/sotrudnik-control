@@ -42,14 +42,18 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'director': return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-      case 'admin': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-      default: return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      case 'director': return 'bg-amber-100 text-amber-700 border-amber-300';
+      case 'admin': return 'bg-purple-100 text-purple-700 border-purple-300';
+      default: return 'bg-blue-100 text-blue-700 border-blue-300';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex relative overflow-hidden">
+      {/* Декоративные 3D линии */}
+      <div className="decorative-lines"></div>
+      <div className="grid-3d"></div>
+
       {/* Sidebar */}
       <Sidebar
         activeSection={activeSection}
@@ -61,20 +65,20 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen relative z-10">
         {/* Header */}
-        <header className="bg-gray-800/80 backdrop-blur-sm border-b border-gray-700/50 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+        <header className="glass border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden text-gray-400 hover:text-white"
+              className="lg:hidden text-gray-600 hover:text-gray-800"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
             <div>
-              <h2 className="text-white font-semibold text-lg capitalize">
+              <h2 className="text-gray-800 font-semibold text-lg capitalize">
                 {activeSection === 'tasks' && 'Мои задачи'}
                 {activeSection === 'all-tasks' && 'Все задачи'}
                 {activeSection === 'documents' && 'Документы и файлы'}
@@ -82,14 +86,14 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
                 {activeSection === 'calendar' && 'Календарь'}
                 {activeSection === 'admin' && 'Панель управления'}
               </h2>
-              <p className="text-gray-400 text-sm">{currentDate} • МСК {currentTime}</p>
+              <p className="text-gray-600 text-sm">{currentDate} • МСК {currentTime}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2">
               <div className="text-right">
-                <p className="text-white text-sm font-medium">{user.name.split(' ').slice(0, 2).join(' ')}</p>
+                <p className="text-gray-800 text-sm font-medium">{user.name.split(' ').slice(0, 2).join(' ')}</p>
                 <span className={`text-xs px-2 py-0.5 rounded-full border ${getRoleColor(user.role)}`}>
                   {getRoleLabel(user.role)}
                 </span>
@@ -97,7 +101,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
             </div>
             <button
               onClick={onLogout}
-              className="p-2 text-gray-400 hover:text-red-400 transition"
+              className="p-2 text-gray-600 hover:text-red-500 transition"
               title="Выйти"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

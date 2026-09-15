@@ -53,8 +53,8 @@ export default function Documents({ user }: DocumentsProps) {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Category sidebar */}
         <div className="lg:w-72 flex-shrink-0">
-          <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 p-3">
-            <h3 className="text-white font-semibold mb-3 px-2">Категории документов</h3>
+          <div className="card-light rounded-xl p-3">
+            <h3 className="text-gray-800 font-semibold mb-3 px-2">Категории документов</h3>
             <div className="space-y-1">
               {categories.map((cat) => (
                 <button
@@ -62,8 +62,8 @@ export default function Documents({ user }: DocumentsProps) {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition text-sm ${
                     activeCategory === cat.id
-                      ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                      : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
+                      ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 border border-indigo-200'
+                      : 'text-gray-600 hover:bg-white/50 hover:text-gray-800'
                   }`}
                 >
                   <span>{cat.icon}</span>
@@ -77,12 +77,12 @@ export default function Documents({ user }: DocumentsProps) {
         {/* Documents list */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white">
+            <h3 className="text-xl font-bold text-gray-800">
               {searchQuery.trim() ? `Результаты поиска: "${searchQuery}"` : categories.find((c) => c.id === activeCategory)?.label}
             </h3>
             <button
               onClick={() => setShowUpload(true)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+              className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition text-sm font-medium shadow-md"
             >
               + Добавить документ
             </button>
@@ -98,7 +98,7 @@ export default function Documents({ user }: DocumentsProps) {
           </div>
 
           {documents.length === 0 ? (
-            <div className="text-center py-12 bg-gray-800/30 rounded-xl border border-gray-700/30">
+            <div className="text-center py-12 card-light rounded-xl">
               <p className="text-gray-500">Документов в этой категории пока нет</p>
             </div>
           ) : (
@@ -111,13 +111,13 @@ export default function Documents({ user }: DocumentsProps) {
                 return (
                   <div
                     key={doc.id}
-                    className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 flex items-center gap-4 hover:bg-gray-800/70 transition"
+                    className="card-light rounded-xl p-4 flex items-center gap-4 hover-lift"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-2xl flex-shrink-0">
                       {icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium truncate">{doc.name}</p>
+                      <p className="text-gray-800 font-medium truncate">{doc.name}</p>
                       <div className="flex items-center gap-2 text-gray-500 text-xs">
                         <span>{uploader?.name || 'Неизвестно'}</span>
                         <span>•</span>
@@ -136,7 +136,7 @@ export default function Documents({ user }: DocumentsProps) {
                     {(doc.uploadedBy === user.id || user.role === 'director' || user.role === 'admin') && (
                       <button
                         onClick={() => handleDelete(doc.id)}
-                        className="text-gray-500 hover:text-red-400 transition p-1"
+                        className="text-gray-400 hover:text-red-500 transition p-1"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -224,12 +224,12 @@ function UploadDocModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
-        <h3 className="text-xl font-bold text-white mb-4">Добавить документ</h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="card-light rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto animate-slide-in">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Добавить документ</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Файл</label>
+            <label className="block text-sm text-gray-700 mb-1">Файл</label>
             <FileUpload onFileSelect={handleFileSelect} />
             {selectedFile && (
               <div className="mt-3">
@@ -248,12 +248,12 @@ function UploadDocModal({
             )}
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Название документа</label>
+            <label className="block text-sm text-gray-700 mb-1">Название документа</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               placeholder="Договор №123 от 01.01.2025"
               required
             />
@@ -262,14 +262,14 @@ function UploadDocModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
               disabled={isUploading}
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium disabled:opacity-50"
+              className="flex-1 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition font-medium disabled:opacity-50 shadow-md"
               disabled={isUploading || !selectedFile}
             >
               {isUploading ? 'Загрузка...' : 'Загрузить'}

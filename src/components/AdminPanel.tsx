@@ -72,19 +72,19 @@ export default function AdminPanel({ user }: AdminPanelProps) {
     switch (role) {
       case 'director':
         return (
-          <span className="px-2 py-0.5 rounded-full text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          <span className="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-700 border border-amber-300">
             Управляющий
           </span>
         );
       case 'admin':
         return (
-          <span className="px-2 py-0.5 rounded-full text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30">
+          <span className="px-2 py-0.5 rounded-full text-xs bg-purple-100 text-purple-700 border border-purple-300">
             Администратор
           </span>
         );
       default:
         return (
-          <span className="px-2 py-0.5 rounded-full text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">
+          <span className="px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-700 border border-indigo-300">
             Сотрудник
           </span>
         );
@@ -97,14 +97,14 @@ export default function AdminPanel({ user }: AdminPanelProps) {
     <div className="max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white">Панель управления</h3>
-          <p className="text-gray-400 text-sm">
+          <h3 className="text-xl font-bold text-gray-800">Панель управления</h3>
+          <p className="text-gray-600 text-sm">
             Управление сотрудниками и ролями
           </p>
         </div>
         <button
           onClick={() => setShowInvite(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+          className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition text-sm font-medium shadow-md"
         >
           + Пригласить сотрудника
         </button>
@@ -112,24 +112,24 @@ export default function AdminPanel({ user }: AdminPanelProps) {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
-          <p className="text-amber-300 text-sm">Управляющий</p>
-          <p className="text-white text-2xl font-bold">{directorCount}/1</p>
+        <div className="card-light rounded-xl p-4">
+          <p className="text-amber-600 text-sm">Управляющий</p>
+          <p className="text-gray-800 text-2xl font-bold">{directorCount}/1</p>
         </div>
-        <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
-          <p className="text-purple-300 text-sm">Администраторы</p>
-          <p className="text-white text-2xl font-bold">{adminCount}/3</p>
+        <div className="card-light rounded-xl p-4">
+          <p className="text-purple-600 text-sm">Администраторы</p>
+          <p className="text-gray-800 text-2xl font-bold">{adminCount}/3</p>
         </div>
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-          <p className="text-blue-300 text-sm">Всего сотрудников</p>
-          <p className="text-white text-2xl font-bold">{users.length}</p>
+        <div className="card-light rounded-xl p-4">
+          <p className="text-indigo-600 text-sm">Всего сотрудников</p>
+          <p className="text-gray-800 text-2xl font-bold">{users.length}</p>
         </div>
       </div>
 
       {/* Users list */}
-      <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden">
-        <div className="p-4 border-b border-gray-700/50">
-          <h4 className="text-white font-semibold mb-3">Список сотрудников</h4>
+      <div className="card-light rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-gray-200">
+          <h4 className="text-gray-800 font-semibold mb-3">Список сотрудников</h4>
           <div className="max-w-md">
             <SearchBar
               value={searchQuery}
@@ -138,22 +138,22 @@ export default function AdminPanel({ user }: AdminPanelProps) {
             />
           </div>
         </div>
-        <div className="divide-y divide-gray-700/50">
+        <div className="divide-y divide-gray-200">
           {filteredUsers.length === 0 ? (
             <div className="p-6 text-center text-gray-500 text-sm">
               {searchQuery.trim() ? 'Сотрудники не найдены' : 'Нет сотрудников'}
             </div>
           ) : null}
           {filteredUsers.map((u) => (
-            <div key={u.id} className="p-4 flex items-center gap-4 hover:bg-gray-700/20 transition">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+            <div key={u.id} className="p-4 flex items-center gap-4 hover:bg-white/50 transition">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {u.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-white font-medium truncate">{u.name}</p>
+                  <p className="text-gray-800 font-medium truncate">{u.name}</p>
                   {!u.isActive && (
-                    <span className="px-1.5 py-0.5 rounded text-xs bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+                    <span className="px-1.5 py-0.5 rounded text-xs bg-yellow-100 text-yellow-700 border border-yellow-300">
                       Ожидает активации
                     </span>
                   )}
@@ -168,7 +168,7 @@ export default function AdminPanel({ user }: AdminPanelProps) {
                     {u.role !== 'director' && directorCount < 1 && (
                       <button
                         onClick={() => handlePromoteToDirector(u.id)}
-                        className="p-1.5 text-amber-400 hover:bg-amber-500/20 rounded transition"
+                        className="p-1.5 text-amber-600 hover:bg-amber-100 rounded transition"
                         title="Назначить управляющим"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,7 +179,7 @@ export default function AdminPanel({ user }: AdminPanelProps) {
                     {u.role !== 'admin' && adminCount < 3 && (
                       <button
                         onClick={() => handlePromoteToAdmin(u.id)}
-                        className="p-1.5 text-purple-400 hover:bg-purple-500/20 rounded transition"
+                        className="p-1.5 text-purple-600 hover:bg-purple-100 rounded transition"
                         title="Назначить администратором"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,7 +190,7 @@ export default function AdminPanel({ user }: AdminPanelProps) {
                     {u.role !== 'employee' && (
                       <button
                         onClick={() => handleDemoteToEmployee(u.id)}
-                        className="p-1.5 text-gray-400 hover:bg-gray-500/20 rounded transition"
+                        className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition"
                         title="Снять роль"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,7 +200,7 @@ export default function AdminPanel({ user }: AdminPanelProps) {
                     )}
                     <button
                       onClick={() => handleRemove(u.id)}
-                      className="p-1.5 text-red-400 hover:bg-red-500/20 rounded transition"
+                      className="p-1.5 text-red-500 hover:bg-red-100 rounded transition"
                       title="Удалить сотрудника"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -275,45 +275,45 @@ function InviteModal({
 
   if (success) {
     return (
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
           <div className="text-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Приглашение отправлено!</h3>
-            <p className="text-gray-400 text-sm">
-              На почту <span className="text-white">{email}</span> отправлено приглашение с временным паролем.
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Приглашение отправлено!</h3>
+            <p className="text-gray-600 text-sm">
+              На почту <span className="text-gray-800 font-medium">{email}</span> отправлено приглашение с временным паролем.
             </p>
           </div>
 
           {/* Demo: show what was "sent" via email */}
-          <div className="bg-gray-700/50 rounded-lg p-4 mb-4 border border-gray-600/50">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span className="text-blue-300 text-xs font-medium">📧 Демо: содержимое письма</span>
+              <span className="text-indigo-600 text-xs font-medium">📧 Демо: содержимое письма</span>
             </div>
-            <div className="text-gray-300 text-xs space-y-1">
-              <p>Здравствуйте, <span className="text-white">{name}</span>!</p>
+            <div className="text-gray-700 text-xs space-y-1">
+              <p>Здравствуйте, <span className="text-gray-800 font-medium">{name}</span>!</p>
               <p>Вы приглашены в систему «Синхрон».</p>
-              <p>Ваша роль: <span className="text-white">
+              <p>Ваша роль: <span className="text-gray-800 font-medium">
                 {role === 'director' ? 'Управляющий' : role === 'admin' ? 'Администратор' : 'Сотрудник'}
               </span></p>
-              <p>Временный пароль: <span className="text-amber-300 font-mono font-bold tracking-widest">{tempPassword}</span></p>
-              <p className="text-gray-400 mt-2">
-                Перейдите по ссылке для активации: <span className="text-blue-400 underline">synchron.app/activate?email={email}</span>
+              <p>Временный пароль: <span className="text-amber-600 font-mono font-bold tracking-widest">{tempPassword}</span></p>
+              <p className="text-gray-500 mt-2">
+                Перейдите по ссылке для активации: <span className="text-indigo-600 underline">synchron.app/activate?email={email}</span>
               </p>
-              <p className="text-gray-500 mt-1">После входа вам будет предложено установить постоянный 6-значный пароль.</p>
+              <p className="text-gray-400 mt-1">После входа вам будет предложено установить постоянный 6-значный пароль.</p>
             </div>
           </div>
 
           <button
             onClick={onInvited}
-            className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+            className="w-full py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition font-medium shadow-md"
           >
             Готово
           </button>
@@ -323,41 +323,41 @@ function InviteModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
-        <h3 className="text-xl font-bold text-white mb-2">Пригласить сотрудника</h3>
-        <p className="text-gray-400 text-sm mb-4">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Пригласить сотрудника</h3>
+        <p className="text-gray-600 text-sm mb-4">
           Укажите email сотрудника и выберите роль. На почту будет отправлено приглашение с временным паролем.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">ФИО сотрудника</label>
+            <label className="block text-sm text-gray-700 mb-1">ФИО сотрудника</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               placeholder="Петров Пётр Петрович"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Электронная почта</label>
+            <label className="block text-sm text-gray-700 mb-1">Электронная почта</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               placeholder="employee@example.com"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Роль в системе</label>
+            <label className="block text-sm text-gray-700 mb-1">Роль в системе</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as Role)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               <option value="employee">Сотрудник (без ограничений по количеству)</option>
               <option value="admin" disabled={adminCount >= 3}>
@@ -370,13 +370,13 @@ function InviteModal({
           </div>
 
           {error && (
-            <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-3 text-red-200 text-sm">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-600 text-sm">
               {error}
             </div>
           )}
 
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-            <p className="text-blue-300 text-xs">
+          <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+            <p className="text-indigo-700 text-xs">
               ℹ️ Сотруднику на почту придёт приглашение со ссылкой и временным паролем. При первом входе он установит свой постоянный 6-значный пароль.
             </p>
           </div>
@@ -385,13 +385,13 @@ function InviteModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+              className="flex-1 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition font-medium shadow-md"
             >
               Пригласить
             </button>

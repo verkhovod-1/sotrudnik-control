@@ -114,12 +114,12 @@ export default function Chat({ user }: ChatProps) {
 
   return (
     <div className="max-w-6xl mx-auto h-[calc(100vh-180px)]">
-      <div className="flex bg-gray-800/50 rounded-xl border border-gray-700/50 h-full overflow-hidden">
+      <div className="flex card-light rounded-xl h-full overflow-hidden">
         {/* Contacts list */}
-        <div className={`w-full md:w-80 border-r border-gray-700/50 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
-          <div className="p-4 border-b border-gray-700/50">
-            <h3 className="text-white font-semibold">Сотрудники</h3>
-            <p className="text-gray-500 text-xs mt-1">Выберите сотрудника для чата</p>
+        <div className={`w-full md:w-80 border-r border-gray-200 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-gray-800 font-semibold">Сотрудники</h3>
+            <p className="text-gray-600 text-xs mt-1">Выберите сотрудника для чата</p>
             <div className="mt-2">
               <SearchBar
                 value={contactSearch}
@@ -142,21 +142,21 @@ export default function Chat({ user }: ChatProps) {
                     onClick={() => setSelectedUser(u.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition ${
                       selectedUser === u.id
-                        ? 'bg-blue-500/10 border-l-2 border-blue-500'
-                        : 'hover:bg-gray-700/30'
+                        ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-l-2 border-indigo-500'
+                        : 'hover:bg-white/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {u.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm font-medium truncate">{u.name}</p>
+                      <p className="text-gray-800 text-sm font-medium truncate">{u.name}</p>
                       <p className="text-gray-500 text-xs">
                         {u.role === 'director' ? 'Управляющий' : u.role === 'admin' ? 'Администратор' : 'Сотрудник'}
                       </p>
                     </div>
                     {unread > 0 && (
-                      <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                         {unread}
                       </span>
                     )}
@@ -172,7 +172,7 @@ export default function Chat({ user }: ChatProps) {
           {!selectedUser ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
                 <p className="text-gray-500">Выберите сотрудника для начала диалога</p>
@@ -181,21 +181,21 @@ export default function Chat({ user }: ChatProps) {
           ) : (
             <>
               {/* Chat header */}
-              <div className="p-4 border-b border-gray-700/50 flex flex-col gap-3">
+              <div className="p-4 border-b border-gray-200 flex flex-col gap-3">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setSelectedUser(null)}
-                    className="md:hidden text-gray-400 hover:text-white"
+                    className="md:hidden text-gray-600 hover:text-gray-800"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
                     {otherUsers.find((u) => u.id === selectedUser)?.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-white font-medium text-sm">
+                    <p className="text-gray-800 font-medium text-sm">
                       {otherUsers.find((u) => u.id === selectedUser)?.name}
                     </p>
                     <p className="text-gray-500 text-xs">Личный чат</p>
@@ -228,18 +228,18 @@ export default function Chat({ user }: ChatProps) {
                         <div
                           className={`max-w-[70%] rounded-2xl px-4 py-2 ${
                             isMe
-                              ? 'bg-blue-500 text-white rounded-br-md'
-                              : 'bg-gray-700 text-gray-200 rounded-bl-md'
+                              ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-br-md shadow-md'
+                              : 'bg-white text-gray-800 rounded-bl-md border border-gray-200'
                           }`}
                         >
                           {msg.text && <p className="text-sm">{msg.text}</p>}
                           {msg.attachment && (
-                            <div className={`mt-1 p-2 rounded-lg ${isMe ? 'bg-blue-600/50' : 'bg-gray-600/50'}`}>
+                            <div className={`mt-1 p-2 rounded-lg ${isMe ? 'bg-white/20' : 'bg-gray-50'}`}>
                               <div className="flex items-center gap-2">
                                 <span className="text-lg flex-shrink-0">{getFileIcon(msg.attachment.name)}</span>
                                 <div className="min-w-0 flex-1">
                                   <p className="text-xs font-medium truncate">{msg.attachment.name}</p>
-                                  <p className={`text-xs ${isMe ? 'text-blue-200' : 'text-gray-400'}`}>
+                                  <p className={`text-xs ${isMe ? 'text-indigo-100' : 'text-gray-500'}`}>
                                     {formatFileSize(msg.attachment.size)}
                                   </p>
                                 </div>
@@ -251,7 +251,7 @@ export default function Chat({ user }: ChatProps) {
                               </div>
                             </div>
                           )}
-                          <p className={`text-xs mt-1 ${isMe ? 'text-blue-200' : 'text-gray-500'}`}>
+                          <p className={`text-xs mt-1 ${isMe ? 'text-indigo-100' : 'text-gray-500'}`}>
                             {formatMSKDateTime(msg.timestamp)}
                           </p>
                         </div>
@@ -263,18 +263,18 @@ export default function Chat({ user }: ChatProps) {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSend} className="p-4 border-t border-gray-700/50">
+              <form onSubmit={handleSend} className="p-4 border-t border-gray-200">
                 {attachment && (
-                  <div className="mb-2 p-2 bg-gray-700/50 rounded-lg flex items-center gap-2">
+                  <div className="mb-2 p-2 bg-white border border-gray-200 rounded-lg flex items-center gap-2">
                     <span className="text-lg">{getFileIcon(attachment.name)}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm truncate">{attachment.name}</p>
+                      <p className="text-gray-800 text-sm truncate">{attachment.name}</p>
                       <p className="text-gray-500 text-xs">{formatFileSize(attachment.size)}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setAttachment(null)}
-                      className="text-gray-500 hover:text-red-400 transition"
+                      className="text-gray-400 hover:text-red-500 transition"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -292,7 +292,7 @@ export default function Chat({ user }: ChatProps) {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-gray-400 hover:text-blue-400 transition rounded-lg hover:bg-gray-700/50"
+                    className="p-2 text-gray-600 hover:text-indigo-600 transition rounded-lg hover:bg-white/50"
                     title="Прикрепить файл"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -303,12 +303,12 @@ export default function Chat({ user }: ChatProps) {
                     type="text"
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
-                    className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     placeholder="Введите сообщение..."
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-md"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

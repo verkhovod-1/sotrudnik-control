@@ -119,23 +119,23 @@ export default function Calendar({ user }: CalendarProps) {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Calendar */}
         <div className="flex-1">
-          <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 p-4">
+          <div className="card-light rounded-xl p-4">
             {/* Calendar header */}
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={prevMonth}
-                className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition"
+                className="p-2 text-gray-600 hover:text-gray-800 hover:bg-white/50 rounded-lg transition"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <h3 className="text-white font-semibold text-lg">
+              <h3 className="text-gray-800 font-semibold text-lg">
                 {monthNames[month]} {year}
               </h3>
               <button
                 onClick={nextMonth}
-                className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition"
+                className="p-2 text-gray-600 hover:text-gray-800 hover:bg-white/50 rounded-lg transition"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -169,10 +169,10 @@ export default function Calendar({ user }: CalendarProps) {
                     onClick={() => setSelectedDate(dateStr)}
                     className={`aspect-square rounded-lg flex flex-col items-center justify-center text-sm transition relative ${
                       isToday
-                        ? 'bg-blue-500/20 border border-blue-500/50 text-blue-300'
+                        ? 'bg-indigo-100 border border-indigo-300 text-indigo-700'
                         : isSelected
-                        ? 'bg-purple-500/20 border border-purple-500/50 text-purple-300'
-                        : 'hover:bg-gray-700/50 text-gray-300'
+                        ? 'bg-purple-100 border border-purple-300 text-purple-700'
+                        : 'hover:bg-white/50 text-gray-700'
                     }`}
                   >
                     <span>{day}</span>
@@ -182,7 +182,7 @@ export default function Calendar({ user }: CalendarProps) {
                           <div
                             key={i}
                             className={`w-1.5 h-1.5 rounded-full ${
-                              n.recurring ? 'bg-amber-400' : 'bg-blue-400'
+                              n.recurring ? 'bg-amber-500' : 'bg-indigo-500'
                             }`}
                           />
                         ))}
@@ -193,12 +193,12 @@ export default function Calendar({ user }: CalendarProps) {
               })}
             </div>
 
-            <div className="flex gap-4 mt-4 text-xs text-gray-500">
+            <div className="flex gap-4 mt-4 text-xs text-gray-600">
               <span className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-blue-400"></div> Разовое
+                <div className="w-2 h-2 rounded-full bg-indigo-500"></div> Разовое
               </span>
               <span className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-amber-400"></div> Ежемесячное
+                <div className="w-2 h-2 rounded-full bg-amber-500"></div> Ежемесячное
               </span>
             </div>
           </div>
@@ -206,9 +206,9 @@ export default function Calendar({ user }: CalendarProps) {
 
         {/* Notes panel */}
         <div className="lg:w-80">
-          <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 p-4">
+          <div className="card-light rounded-xl p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">
+              <h3 className="text-gray-800 font-semibold">
                 {selectedDate
                   ? `Заметки на ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}`
                   : 'Выберите дату'}
@@ -216,7 +216,7 @@ export default function Calendar({ user }: CalendarProps) {
               {selectedDate && (
                 <button
                   onClick={() => setShowAddNote(true)}
-                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                  className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-md"
                   title="Добавить заметку"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -241,14 +241,14 @@ export default function Calendar({ user }: CalendarProps) {
                     key={note.id}
                     className={`p-3 rounded-lg border ${
                       note.recurring
-                        ? 'bg-amber-500/10 border-amber-500/30'
-                        : 'bg-blue-500/10 border-blue-500/30'
+                        ? 'bg-amber-50 border-amber-200'
+                        : 'bg-indigo-50 border-indigo-200'
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-white text-sm font-medium">{note.title}</p>
-                        <p className="text-gray-400 text-xs mt-1">
+                        <p className="text-gray-800 text-sm font-medium">{note.title}</p>
+                        <p className="text-gray-600 text-xs mt-1">
                           {note.time && `🕐 ${note.time}`}
                           {note.recurring && ' • 🔄 Ежемесячно'}
                           {note.remindDaysBefore > 0 && ` • ⏰ За ${note.remindDaysBefore} дн.`}
@@ -259,11 +259,11 @@ export default function Calendar({ user }: CalendarProps) {
                             {note.attachments.map((att, idx) => (
                               <div
                                 key={idx}
-                                className="flex items-center gap-2 p-1.5 bg-gray-700/30 rounded"
+                                className="flex items-center gap-2 p-1.5 bg-white rounded"
                               >
                                 <span className="text-xs flex-shrink-0">{getFileIcon(att.name)}</span>
                                 <div className="flex-1 min-w-0">
-                                  <span className="text-xs text-blue-300 truncate block">{att.name}</span>
+                                  <span className="text-xs text-indigo-600 truncate block">{att.name}</span>
                                   <span className="text-xs text-gray-500">{formatFileSize(att.size)}</span>
                                 </div>
                                 <FileActions
@@ -276,7 +276,7 @@ export default function Calendar({ user }: CalendarProps) {
                                     removeCalendarNoteAttachment(note.id, idx);
                                     setRefresh((r) => r + 1);
                                   }}
-                                  className="text-gray-500 hover:text-red-400 transition"
+                                  className="text-gray-400 hover:text-red-500 transition"
                                 >
                                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -297,7 +297,7 @@ export default function Calendar({ user }: CalendarProps) {
                             deleteCalendarNote(note.id);
                             setRefresh((r) => r + 1);
                           }}
-                          className="text-gray-500 hover:text-red-400 transition"
+                          className="text-gray-400 hover:text-red-500 transition"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -360,30 +360,30 @@ function AddNoteModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
-        <h3 className="text-xl font-bold text-white mb-4">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">
           Новая заметка на {new Date(date + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Название заметки</label>
+            <label className="block text-sm text-gray-700 mb-1">Название заметки</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               placeholder="Встреча с клиентом"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Время (необязательно)</label>
+            <label className="block text-sm text-gray-700 mb-1">Время (необязательно)</label>
             <input
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
           <div className="flex items-center gap-3">
@@ -392,13 +392,13 @@ function AddNoteModal({
                 type="checkbox"
                 checked={recurring}
                 onChange={(e) => setRecurring(e.target.checked)}
-                className="w-4 h-4 rounded bg-gray-700 border-gray-600 text-blue-500 focus:ring-blue-500"
+                className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-400"
               />
-              <span className="text-gray-300 text-sm">Ежемесячно</span>
+              <span className="text-gray-700 text-sm">Ежемесячно</span>
             </label>
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">
+            <label className="block text-sm text-gray-700 mb-1">
               Напомнить за сколько дней до события?
             </label>
             <input
@@ -407,7 +407,7 @@ function AddNoteModal({
               onChange={(e) => setRemindDaysBefore(parseInt(e.target.value) || 0)}
               min={0}
               max={30}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             <p className="text-gray-500 text-xs mt-1">
               Программа автоматически создаст вам задачу-напоминание за указанное количество дней
@@ -417,13 +417,13 @@ function AddNoteModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+              className="flex-1 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition font-medium shadow-md"
             >
               Сохранить
             </button>
@@ -473,7 +473,7 @@ function NoteAttachButton({ noteId, onAttached }: { noteId: string; onAttached: 
       />
       <button
         onClick={() => inputRef.current?.click()}
-        className="text-gray-500 hover:text-blue-400 transition"
+        className="text-gray-400 hover:text-indigo-600 transition"
         title="Прикрепить файл"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
