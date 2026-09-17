@@ -85,12 +85,10 @@ export default function Login({ onLogin, onForgotPassword, onActivated }: LoginP
         <div className="bg-white rounded-lg shadow-md p-8">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center mb-4">
-              <img
-                src="https://i.ibb.co/2042Q14Q/image.png"
-                alt="Синхрон"
-                className="w-24 h-24 object-contain"
-              />
+            <div className="inline-flex items-center justify-center w-24 h-24 mb-4 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
+              <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Синхрон</h1>
             <p className="text-gray-600 text-sm">Система управления задачами</p>
