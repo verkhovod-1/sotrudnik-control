@@ -20,7 +20,7 @@ export default function FileActions({ dataUrl, filename, compact = false }: File
       <div className="flex gap-1">
         <button
           onClick={handleDownload}
-          className="text-gray-400 hover:text-indigo-600 transition p-1"
+          className="text-gray-400 hover:text-blue-400 transition p-1"
           title="Скачать"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +29,7 @@ export default function FileActions({ dataUrl, filename, compact = false }: File
         </button>
         <button
           onClick={handlePrint}
-          className="text-gray-400 hover:text-green-600 transition p-1"
+          className="text-gray-400 hover:text-green-400 transition p-1"
           title="Печать"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +44,7 @@ export default function FileActions({ dataUrl, filename, compact = false }: File
     <div className="flex gap-2">
       <button
         onClick={handleDownload}
-        className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg hover:bg-indigo-200 transition text-sm"
+        className="flex items-center gap-2 px-3 py-2 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition text-sm"
         title="Скачать файл"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,7 +54,7 @@ export default function FileActions({ dataUrl, filename, compact = false }: File
       </button>
       <button
         onClick={handlePrint}
-        className="flex items-center gap-2 px-3 py-2 bg-green-100 text-green-700 border border-green-200 rounded-lg hover:bg-green-200 transition text-sm"
+        className="flex items-center gap-2 px-3 py-2 bg-green-500/20 text-green-300 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition text-sm"
         title="Печать файла"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
