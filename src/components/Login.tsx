@@ -80,12 +80,8 @@ export default function Login({ onLogin, onForgotPassword, onActivated }: LoginP
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Декоративные 3D линии */}
-      <div className="decorative-lines"></div>
-      <div className="grid-3d"></div>
-
-      <div className="relative w-full max-w-md z-10 animate-slide-in">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+      <div className="relative w-full max-w-md animate-slide-in">
         <div className="card-light rounded-2xl p-8 hover-lift">
           {/* Logo */}
           <div className="text-center mb-8">

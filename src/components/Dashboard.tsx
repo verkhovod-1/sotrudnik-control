@@ -49,11 +49,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex relative overflow-hidden">
-      {/* Декоративные 3D линии */}
-      <div className="decorative-lines"></div>
-      <div className="grid-3d"></div>
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex">
       {/* Sidebar */}
       <Sidebar
         activeSection={activeSection}
