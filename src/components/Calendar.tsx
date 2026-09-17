@@ -119,7 +119,7 @@ export default function Calendar({ user }: CalendarProps) {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Calendar */}
         <div className="flex-1">
-          <div className="card-light rounded-xl p-4">
+          <div className="bg-white rounded-lg shadow-md p-4">
             {/* Calendar header */}
             <div className="flex items-center justify-between mb-4">
               <button
@@ -206,7 +206,7 @@ export default function Calendar({ user }: CalendarProps) {
 
         {/* Notes panel */}
         <div className="lg:w-80">
-          <div className="card-light rounded-xl p-4">
+          <div className="bg-white rounded-lg shadow-md p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-gray-800 font-semibold">
                 {selectedDate
@@ -361,7 +361,7 @@ function AddNoteModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-4">
           Новая заметка на {new Date(date + 'T00:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </h3>

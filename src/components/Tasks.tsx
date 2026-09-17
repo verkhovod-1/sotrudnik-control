@@ -123,7 +123,7 @@ export default function Tasks({ user }: TasksProps) {
       {/* Task List */}
       <div className="space-y-3">
         {filteredTasks.length === 0 ? (
-          <div className="text-center py-12 card-light rounded-xl">
+          <div className="text-center py-12 bg-white rounded-lg shadow-md">
             <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
@@ -135,12 +135,12 @@ export default function Tasks({ user }: TasksProps) {
             return (
               <div
                 key={task.id}
-                className={`card-light rounded-xl p-4 transition hover-lift ${
+                className={`bg-white rounded-lg shadow-md p-4 transition hover:shadow-lg ${
                   task.completed
-                    ? 'border-green-200'
+                    ? 'border border-green-200'
                     : isOverdue(task)
-                    ? 'border-red-200'
-                    : 'border-gray-200'
+                    ? 'border border-red-200'
+                    : 'border border-gray-200'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -291,7 +291,7 @@ function CreateTaskModal({ user, onClose, onCreated }: { user: User; onClose: ()
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-4">Новая задача (себе)</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -367,7 +367,7 @@ function DelegateTaskModal({ user, onClose, onCreated }: { user: User; onClose: 
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-4">Делегировать задачу</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

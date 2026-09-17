@@ -112,22 +112,22 @@ export default function AdminPanel({ user }: AdminPanelProps) {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="card-light rounded-xl p-4">
+        <div className="bg-white rounded-lg shadow-md p-4">
           <p className="text-amber-600 text-sm">Управляющий</p>
           <p className="text-gray-800 text-2xl font-bold">{directorCount}/1</p>
         </div>
-        <div className="card-light rounded-xl p-4">
+        <div className="bg-white rounded-lg shadow-md p-4">
           <p className="text-purple-600 text-sm">Администраторы</p>
           <p className="text-gray-800 text-2xl font-bold">{adminCount}/3</p>
         </div>
-        <div className="card-light rounded-xl p-4">
+        <div className="bg-white rounded-lg shadow-md p-4">
           <p className="text-indigo-600 text-sm">Всего сотрудников</p>
           <p className="text-gray-800 text-2xl font-bold">{users.length}</p>
         </div>
       </div>
 
       {/* Users list */}
-      <div className="card-light rounded-xl overflow-hidden">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-4 border-b border-gray-200">
           <h4 className="text-gray-800 font-semibold mb-3">Список сотрудников</h4>
           <div className="max-w-md">
@@ -276,7 +276,7 @@ function InviteModal({
   if (success) {
     return (
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+        <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
           <div className="text-center mb-4">
             <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -324,7 +324,7 @@ function InviteModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-light rounded-2xl w-full max-w-md p-6 animate-slide-in">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-2">Пригласить сотрудника</h3>
         <p className="text-gray-600 text-sm mb-4">
           Укажите email сотрудника и выберите роль. На почту будет отправлено приглашение с временным паролем.

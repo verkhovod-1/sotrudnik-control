@@ -80,9 +80,9 @@ export default function Login({ onLogin, onForgotPassword, onActivated }: LoginP
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="relative w-full max-w-md animate-slide-in">
-        <div className="card-light rounded-2xl p-8 hover-lift">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="relative w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-md p-8">
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center mb-4">
@@ -92,7 +92,7 @@ export default function Login({ onLogin, onForgotPassword, onActivated }: LoginP
                 className="w-24 h-24 object-contain"
               />
             </div>
-            <h1 className="text-3xl font-bold gradient-text mb-2">Синхрон</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Синхрон</h1>
             <p className="text-gray-600 text-sm">Система управления задачами</p>
           </div>
 

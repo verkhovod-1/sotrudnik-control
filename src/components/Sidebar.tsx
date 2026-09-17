@@ -88,7 +88,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, isOpen, 
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 glass border-r border-gray-200 flex flex-col transform transition-transform duration-300 ${
+        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-16'
         }`}
       >
@@ -102,7 +102,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, isOpen, 
             />
             {isOpen && (
               <div>
-                <h1 className="text-gray-800 font-bold text-lg gradient-text">Синхрон</h1>
+                <h1 className="text-gray-800 font-bold text-lg">Синхрон</h1>
                 <p className="text-gray-500 text-xs">CRM система</p>
               </div>
             )}

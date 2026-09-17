@@ -114,7 +114,7 @@ export default function Chat({ user }: ChatProps) {
 
   return (
     <div className="max-w-6xl mx-auto h-[calc(100vh-180px)]">
-      <div className="flex card-light rounded-xl h-full overflow-hidden">
+      <div className="flex bg-white rounded-lg shadow-md h-full overflow-hidden">
         {/* Contacts list */}
         <div className={`w-full md:w-80 border-r border-gray-200 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-4 border-b border-gray-200">

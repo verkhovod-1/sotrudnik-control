@@ -53,7 +53,7 @@ export default function Documents({ user }: DocumentsProps) {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Category sidebar */}
         <div className="lg:w-72 flex-shrink-0">
-          <div className="card-light rounded-xl p-3">
+          <div className="bg-white rounded-lg shadow-md p-3">
             <h3 className="text-gray-800 font-semibold mb-3 px-2">Категории документов</h3>
             <div className="space-y-1">
               {categories.map((cat) => (
@@ -98,7 +98,7 @@ export default function Documents({ user }: DocumentsProps) {
           </div>
 
           {documents.length === 0 ? (
-            <div className="text-center py-12 card-light rounded-xl">
+            <div className="text-center py-12 bg-white rounded-lg shadow-md">
               <p className="text-gray-500">Документов в этой категории пока нет</p>
             </div>
           ) : (
@@ -111,7 +111,7 @@ export default function Documents({ user }: DocumentsProps) {
                 return (
                   <div
                     key={doc.id}
-                    className="card-light rounded-xl p-4 flex items-center gap-4 hover-lift"
+                    className="bg-white rounded-lg shadow-md p-4 flex items-center gap-4 hover:shadow-lg transition"
                   >
                     <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-2xl flex-shrink-0">
                       {icon}
@@ -225,7 +225,7 @@ function UploadDocModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-light rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto animate-slide-in">
+      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
         <h3 className="text-xl font-bold text-gray-800 mb-4">Добавить документ</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
