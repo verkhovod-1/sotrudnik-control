@@ -10,22 +10,20 @@ import Dashboard from './components/Dashboard';
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('synchron_current_user');
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem('synchron_current_user');
+      if (saved) {
         const user = JSON.parse(saved);
-        // Проверяем что пользователь всё ещё активен
-        if (user.isActive) {
+        if (user && user.isActive) {
           setCurrentUser(user);
-        } else {
-          localStorage.removeItem('synchron_current_user');
         }
-      } catch {
-        localStorage.removeItem('synchron_current_user');
       }
+    } catch (error) {
+      console.error('Error loading user:', error);
+      localStorage.removeItem('synchron_current_user');
     }
     setIsLoading(false);
   }, []);
