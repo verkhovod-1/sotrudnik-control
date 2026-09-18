@@ -7,12 +7,10 @@ import {
 } from './store';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import TestPage from './components/TestPage';
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showTest, setShowTest] = useState(true); // Временно для теста
 
   useEffect(() => {
     const saved = localStorage.getItem('synchron_current_user');
@@ -31,11 +29,6 @@ function App() {
     }
     setIsLoading(false);
   }, []);
-  
-  // Временно показываем тестовую страницу
-  if (showTest) {
-    return <TestPage />;
-  }
 
   // Вход — проверяет email и пароль (временный или постоянный)
   const handleLogin = (email: string, password: string): { success: boolean; error?: string; needsActivation?: boolean } => {
