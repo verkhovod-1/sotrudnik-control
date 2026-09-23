@@ -75,8 +75,8 @@ export default function Sidebar({ activeSection, onSectionChange, user, unreadMe
   ];
 
   return (
-    <aside className="w-64 card-light border-r border-gray-200 flex flex-col flex-shrink-0 relative z-10">
-      <div className="p-4 border-b border-gray-200">
+    <aside className="w-64 bg-gray-100 border-r border-gray-200 flex flex-col flex-shrink-0 relative z-10">
+      <div className="p-4 border-b border-gray-300">
         <div className="flex items-center gap-3">
           <img 
             src="https://s6.iimage.su/s/23/gOCALIHxd0QoEF5cowByWdXrC3TXSVUt0oZtarOLN.png" 
@@ -99,7 +99,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, unreadMe
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                 activeSection === item.id
                   ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                  : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'
               }`}
             >
               {item.icon}
@@ -114,7 +114,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, unreadMe
         )}
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-300">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
             {user.name.charAt(0)}
