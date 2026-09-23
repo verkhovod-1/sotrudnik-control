@@ -47,6 +47,18 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
     }
   };
 
+  const getSectionBackground = (section: Section) => {
+    switch (section) {
+      case 'tasks': return 'bg-blue-50';
+      case 'all-tasks': return 'bg-purple-50';
+      case 'documents': return 'bg-emerald-50';
+      case 'chat': return 'bg-pink-50';
+      case 'calendar': return 'bg-amber-50';
+      case 'admin': return 'bg-orange-50';
+      default: return 'bg-blue-50';
+    }
+  };
+
   return (
     <div className="min-h-screen flex decorative-bg relative">
       <Sidebar
@@ -56,7 +68,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
         unreadMessages={unreadMessages}
       />
 
-      <div className="flex-1 flex flex-col min-h-screen relative z-10">
+      <div className={`flex-1 flex flex-col min-h-screen relative z-10 ${getSectionBackground(activeSection)} transition-colors duration-300`}>
         <header className="card-light border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
           <div>
             <h2 className="text-gray-800 font-semibold text-lg capitalize">
