@@ -67,8 +67,8 @@ export default function AllTasks({ user }: AllTasksProps) {
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white">Все задачи</h3>
-          <p className="text-gray-400 text-sm">
+          <h3 className="text-xl font-bold text-gray-800">Все задачи</h3>
+          <p className="text-gray-600 text-sm">
             Всего: {tasks.length} | Активных: {tasks.filter((t) => !t.completed).length} | Выполнено: {tasks.filter((t) => t.completed).length}
           </p>
         </div>
@@ -89,8 +89,8 @@ export default function AllTasks({ user }: AllTasksProps) {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm transition ${
               filter === f
-                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200'
+                : 'text-gray-600 hover:bg-white/50 hover:text-gray-800'
             }`}
           >
             {f === 'all' ? 'Все' : f === 'active' ? 'Активные' : 'Выполненные'}
@@ -100,7 +100,7 @@ export default function AllTasks({ user }: AllTasksProps) {
 
       <div className="space-y-3">
         {filteredTasks.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 card-light rounded-xl">
             <p className="text-gray-500">Задач не найдено</p>
           </div>
         ) : (
@@ -110,12 +110,12 @@ export default function AllTasks({ user }: AllTasksProps) {
             return (
               <div
                 key={task.id}
-                className={`bg-gray-800/50 border rounded-xl p-4 transition hover:bg-gray-800/70 ${
+                className={`card-light rounded-xl p-4 transition hover-lift ${
                   task.completed
-                    ? 'border-green-500/20'
+                    ? 'border-green-200'
                     : isOverdue(task)
-                    ? 'border-red-500/30'
-                    : 'border-gray-700/50'
+                    ? 'border-red-200'
+                    : 'border-gray-200'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -124,7 +124,7 @@ export default function AllTasks({ user }: AllTasksProps) {
                     className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
                       task.completed
                         ? 'bg-green-500 border-green-500'
-                        : 'border-gray-500 hover:border-blue-400'
+                        : 'border-gray-400 hover:border-indigo-500'
                     }`}
                   >
                     {task.completed && (
@@ -135,20 +135,20 @@ export default function AllTasks({ user }: AllTasksProps) {
                   </button>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-white'}`}>
+                    <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                       {task.title}
                     </h4>
                     {task.description && (
-                      <p className="text-gray-400 text-sm mt-1">{task.description}</p>
+                      <p className="text-gray-600 text-sm mt-1">{task.description}</p>
                     )}
                     <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
-                      <span className="text-purple-300">
+                      <span className="text-purple-600">
                         Исполнитель: {assignee?.name || 'Неизвестно'}
                       </span>
                       <span className="text-gray-500">
                         Создана: {formatMSKDateTime(task.createdAt)}
                       </span>
-                      <span className={isOverdue(task) ? 'text-red-400' : 'text-gray-500'}>
+                      <span className={isOverdue(task) ? 'text-red-600' : 'text-gray-500'}>
                         Срок: {formatMSKDateTime(task.deadline)}
                         {isOverdue(task) && ' ⚠️ Просрочено'}
                       </span>
@@ -160,7 +160,7 @@ export default function AllTasks({ user }: AllTasksProps) {
 
                   <button
                     onClick={() => handleDelete(task.id)}
-                    className="text-gray-500 hover:text-red-400 transition p-1"
+                    className="text-gray-400 hover:text-red-500 transition p-1"
                     title="Удалить"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

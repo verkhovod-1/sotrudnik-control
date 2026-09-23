@@ -73,8 +73,8 @@ export default function FileUpload({
         onDrop={handleDrop}
         className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${
           dragActive
-            ? 'border-blue-400 bg-blue-500/10'
-            : 'border-gray-600 hover:border-gray-500 bg-gray-800/30'
+            ? 'border-indigo-400 bg-indigo-50'
+            : 'border-gray-300 hover:border-gray-400 bg-gray-50'
         }`}
       >
         <input
@@ -87,12 +87,12 @@ export default function FileUpload({
         
         <div className="space-y-2">
           <div className="text-4xl">📁</div>
-          <p className="text-gray-300 text-sm">
+          <p className="text-gray-700 text-sm">
             Перетащите файл сюда или{' '}
             <button
               type="button"
               onClick={handleButtonClick}
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-indigo-600 hover:text-indigo-800 underline"
             >
               выберите вручную
             </button>
@@ -104,7 +104,7 @@ export default function FileUpload({
       </div>
 
       {error && (
-        <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded text-red-300 text-xs">
+        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-600 text-xs">
           {error}
         </div>
       )}
@@ -127,16 +127,16 @@ export function FileDisplay({ file, onRemove }: FileDisplayProps) {
   const size = formatFileSize(file.size);
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg">
+    <div className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
       <div className="text-2xl flex-shrink-0">{icon}</div>
       <div className="flex-1 min-w-0">
-        <p className="text-white text-sm font-medium truncate">{file.name}</p>
+        <p className="text-gray-800 text-sm font-medium truncate">{file.name}</p>
         <p className="text-gray-500 text-xs">{size}</p>
       </div>
       {onRemove && (
         <button
           onClick={onRemove}
-          className="text-gray-500 hover:text-red-400 transition p-1"
+          className="text-gray-400 hover:text-red-500 transition p-1"
           title="Удалить"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -77,14 +77,14 @@ export default function Tasks({ user }: TasksProps) {
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white">Мои задачи</h3>
-          <p className="text-gray-400 text-sm">
+          <h3 className="text-xl font-bold text-gray-800">Мои задачи</h3>
+          <p className="text-gray-600 text-sm">
             Всего: {tasks.length} | Активных: {tasks.filter((t) => !t.completed).length} | Выполнено: {tasks.filter((t) => t.completed).length}
           </p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+          className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition text-sm font-medium shadow-md"
         >
           + Новая задача
         </button>
@@ -105,8 +105,8 @@ export default function Tasks({ user }: TasksProps) {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm transition ${
               filter === f
-                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200'
+                : 'text-gray-600 hover:bg-white/50 hover:text-gray-800'
             }`}
           >
             {f === 'all' ? 'Все' : f === 'active' ? 'Активные' : 'Выполненные'}
@@ -116,8 +116,8 @@ export default function Tasks({ user }: TasksProps) {
 
       <div className="space-y-3">
         {filteredTasks.length === 0 ? (
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="text-center py-12 card-light rounded-xl">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             <p className="text-gray-500">Задач пока нет</p>
@@ -128,12 +128,12 @@ export default function Tasks({ user }: TasksProps) {
             return (
               <div
                 key={task.id}
-                className={`bg-gray-800/50 border rounded-xl p-4 transition hover:bg-gray-800/70 ${
+                className={`card-light rounded-xl p-4 transition hover-lift ${
                   task.completed
-                    ? 'border-green-500/20'
+                    ? 'border-green-200'
                     : isOverdue(task)
-                    ? 'border-red-500/30'
-                    : 'border-gray-700/50'
+                    ? 'border-red-200'
+                    : 'border-gray-200'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -153,17 +153,17 @@ export default function Tasks({ user }: TasksProps) {
                   </button>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-white'}`}>
+                    <h4 className={`font-medium ${task.completed ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
                       {task.title}
                     </h4>
                     {task.description && (
-                      <p className="text-gray-400 text-sm mt-1">{task.description}</p>
+                      <p className="text-gray-600 text-sm mt-1">{task.description}</p>
                     )}
                     <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
                       <span className="text-gray-500">
                         Создана: {formatMSKDateTime(task.createdAt)}
                       </span>
-                      <span className={isOverdue(task) ? 'text-red-400' : 'text-gray-500'}>
+                      <span className={isOverdue(task) ? 'text-red-600' : 'text-gray-500'}>
                         Срок: {formatMSKDateTime(task.deadline)}
                         {isOverdue(task) && ' ⚠️ Просрочено'}
                       </span>
@@ -171,7 +171,7 @@ export default function Tasks({ user }: TasksProps) {
                         От: {creator?.name || 'Неизвестно'}
                       </span>
                       {task.completed && task.completedAt && (
-                        <span className="text-green-400">
+                        <span className="text-green-600">
                           ✓ Выполнено: {formatMSKDateTime(task.completedAt)}
                         </span>
                       )}
@@ -181,7 +181,7 @@ export default function Tasks({ user }: TasksProps) {
                   {(task.creatorId === user.id || user.role === 'director' || user.role === 'admin') && (
                     <button
                       onClick={() => handleDelete(task.id)}
-                      className="text-gray-500 hover:text-red-400 transition p-1"
+                      className="text-gray-400 hover:text-red-500 transition p-1"
                       title="Удалить"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -218,36 +218,36 @@ function CreateTaskModal({ onClose, onCreate }: { onClose: () => void; onCreate:
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
-        <h3 className="text-xl font-bold text-white mb-4">Новая задача</h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="card-light rounded-2xl w-full max-w-md p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Новая задача</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Название задачи</label>
+            <label className="block text-sm text-gray-700 mb-1">Название задачи</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Описание</label>
+            <label className="block text-sm text-gray-700 mb-1">Описание</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Срок исполнения</label>
+            <label className="block text-sm text-gray-700 mb-1">Срок исполнения</label>
             <input
               type="datetime-local"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
           </div>
@@ -255,13 +255,13 @@ function CreateTaskModal({ onClose, onCreate }: { onClose: () => void; onCreate:
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+              className="flex-1 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition font-medium shadow-md"
             >
               Создать
             </button>
