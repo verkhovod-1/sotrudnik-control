@@ -85,7 +85,7 @@ export default function Login({ onLogin, onForgotPassword, onActivated }: LoginP
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
           <div className="text-center mb-8">
             <img 
-              src="https://i.ibb.co/96dJtxH/image.png" 
+              src="https://s6.iimage.su/s/23/gOCALIHxd0QoEF5cowByWdXrC3TXSVUt0oZtarOLN.png" 
               alt="Синхрон" 
               className="w-24 h-24 object-contain mb-4"
             />

@@ -79,7 +79,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, unreadMe
       <div className="p-4 border-b border-gray-700/50">
         <div className="flex items-center gap-3">
           <img 
-            src="https://i.ibb.co/96dJtxH/image.png" 
+            src="https://s6.iimage.su/s/23/gOCALIHxd0QoEF5cowByWdXrC3TXSVUt0oZtarOLN.png" 
             alt="Синхрон" 
             className="w-10 h-10 rounded-lg object-contain flex-shrink-0"
           />
