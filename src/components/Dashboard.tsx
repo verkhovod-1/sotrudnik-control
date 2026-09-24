@@ -49,13 +49,13 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
 
   const getSectionBackground = (section: Section) => {
     switch (section) {
-      case 'tasks': return 'bg-blue-50';
-      case 'all-tasks': return 'bg-purple-50';
-      case 'documents': return 'bg-emerald-50';
-      case 'chat': return 'bg-pink-50';
-      case 'calendar': return 'bg-amber-50';
-      case 'admin': return 'bg-orange-50';
-      default: return 'bg-blue-50';
+      case 'tasks': return 'bg-blue-50/60';
+      case 'all-tasks': return 'bg-purple-50/60';
+      case 'documents': return 'bg-emerald-50/60';
+      case 'chat': return 'bg-teal-50/60';
+      case 'calendar': return 'bg-amber-50/60';
+      case 'admin': return 'bg-orange-50/60';
+      default: return 'bg-blue-50/60';
     }
   };
 
