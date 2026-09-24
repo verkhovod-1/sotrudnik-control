@@ -81,7 +81,7 @@ export default function Sidebar({ activeSection, onSectionChange, user, unreadMe
           <img 
             src="https://s6.iimage.su/s/23/gOCALIHxd0QoEF5cowByWdXrC3TXSVUt0oZtarOLN.png" 
             alt="Синхрон" 
-            className="w-10 h-10 rounded-lg object-contain flex-shrink-0"
+            className="w-20 h-20 rounded-lg object-contain flex-shrink-0"
           />
           <div>
             <h1 className="text-gray-800 font-bold text-lg">Синхрон</h1>
