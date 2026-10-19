@@ -148,9 +148,14 @@ export default function AllTasks({ user }: AllTasksProps) {
                       <span className="text-gray-500">
                         Создана: {formatMSKDateTime(task.createdAt)}
                       </span>
-                      <span className={isOverdue(task) ? 'text-red-600' : 'text-gray-500'}>
+                      <span className={isOverdue(task) ? 'text-red-600 font-semibold' : 'text-gray-500'}>
                         Срок: {formatMSKDateTime(task.deadline)}
-                        {isOverdue(task) && ' ⚠️ Просрочено'}
+                        {isOverdue(task) && (
+                          <span className="inline-flex items-center ml-1">
+                            <span className="text-red-500 text-lg animate-pulse">❗</span>
+                            <span className="text-red-600 text-xs ml-1">Просрочено</span>
+                          </span>
+                        )}
                       </span>
                       <span className="text-gray-500">
                         От: {creator?.name || 'Неизвестно'}
