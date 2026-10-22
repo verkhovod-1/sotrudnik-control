@@ -1,0 +1,92 @@
+export type Role = 'director' | 'admin' | 'employee';
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  password: string; // 6-digit (after activation)
+  tempPassword?: string; // temporary password before activation
+  role: Role;
+  isActive: boolean; // false until user sets own password
+  createdAt: string;
+  invitedBy?: string; // id of the user who invited
+  inviteSentAt?: string;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  assigneeId: string;
+  creatorId: string;
+  createdAt: string;
+  deadline: string;
+  completed: boolean;
+  completedAt?: string;
+  attachments?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  }>;
+}
+
+export interface Document {
+  id: string;
+  name: string;
+  category: DocumentCategory;
+  uploadedBy: string;
+  uploadedAt: string;
+  fileName: string;
+  fileSize?: number;
+  fileData?: string; // Base64 данные файла
+  fileType?: string; // MIME тип
+}
+
+export type DocumentCategory =
+  | 'contracts'
+  | 'reference'
+  | 'local_acts'
+  | 'org_orders'
+  | 'payments'
+  | 'other';
+
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  text: string;
+  timestamp: string;
+  read: boolean;
+  attachment?: {
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  };
+}
+
+export interface CalendarNote {
+  id: string;
+  userId: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  time: string; // HH:MM
+  recurring: boolean; // monthly
+  remindDaysBefore: number;
+  taskId?: string; // linked auto-created task
+  attachments?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    dataUrl: string;
+  }>;
+}
+
+export interface AppState {
+  users: User[];
+  tasks: Task[];
+  documents: Document[];
+  messages: ChatMessage[];
+  calendarNotes: CalendarNote[];
+}
