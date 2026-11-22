@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-import { formatMSKTime, formatMSKDate, getUnreadCount } from '../store';
+import { formatMSKTime, formatMSKDate } from '../store';
+import { supabase } from '../lib/supabase';
 import Sidebar from './Sidebar';
 import Tasks from './Tasks';
 import AllTasks from './AllTasks';
@@ -23,12 +25,46 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const updateClock = () => {
       setCurrentTime(formatMSKTime());
       setCurrentDate(formatMSKDate());
-      setUnreadMessages(getUnreadCount(user.id));
-    }, 1000);
+    };
+
+    updateClock();
+
+    const timer = setInterval(updateClock, 1000);
+
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadUnreadMessages = async () => {
+      const { count, error } = await supabase
+        .from('chat_messages')
+        .select('id', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .eq('read', false);
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error('Ошибка загрузки непрочитанных сообщений:', error);
+        return;
+      }
+
+      setUnreadMessages(count ?? 0);
+    };
+
+    loadUnreadMessages();
+
+    const timer = setInterval(loadUnreadMessages, 10000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
   }, [user.id]);
 
   const getRoleLabel = (role: string) => {
@@ -79,18 +115,23 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
               {activeSection === 'calendar' && 'Календарь'}
               {activeSection === 'admin' && 'Панель управления'}
             </h2>
-            <p className="text-gray-600 text-sm">{currentDate} • МСК {currentTime}</p>
+            <p className="text-gray-600 text-sm">
+              {currentDate} • МСК {currentTime}
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2">
               <div className="text-right">
-                <p className="text-gray-800 text-sm font-medium">{user.name.split(' ').slice(0, 2).join(' ')}</p>
+                <p className="text-gray-800 text-sm font-medium">
+                  {user.name.split(' ').slice(0, 2).join(' ')}
+                </p>
                 <span className={`text-xs px-2 py-0.5 rounded-full border ${getRoleColor(user.role)}`}>
                   {getRoleLabel(user.role)}
                 </span>
               </div>
             </div>
+
             <button
               onClick={onLogout}
               className="p-2 text-gray-600 hover:text-red-500 transition"
